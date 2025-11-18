@@ -9,7 +9,11 @@
       "destination": "/index.html"
     },
     {
-      "source": "/lowes/(.*)",
+      "source": "/lowes/dashboard",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/lowes/dashboard/:path*",
       "destination": "/index.html"
     }
   ]

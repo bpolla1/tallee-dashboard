@@ -4,6 +4,12 @@ const API_BASE = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : '/api';
 
+// Debug logging (remove in production if needed)
+if (typeof window !== 'undefined') {
+  console.log('API_BASE:', API_BASE);
+  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+}
+
 export interface MainDashboardData {
   overallRate: number;
   overallChange: number;
@@ -30,9 +36,20 @@ export interface MetricsData {
 }
 
 export async function fetchMainDashboard(): Promise<MainDashboardData> {
-  const response = await fetch(`${API_BASE}/main-dashboard`);
-  if (!response.ok) throw new Error('Failed to fetch main dashboard');
-  return response.json();
+  try {
+    const url = `${API_BASE}/main-dashboard`;
+    console.log('Fetching from:', url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Error:', response.status, errorText);
+      throw new Error(`Failed to fetch main dashboard: ${response.status} ${errorText}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
 }
 
 export async function fetchCompetitors() {

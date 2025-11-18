@@ -17,6 +17,7 @@ export interface Topic {
   visibility: number
   visibilityChange: number
   competitorData: CompetitorData[]
+  chartData?: Array<{ day: string; user: number; competitor: number }>
   phrases: PhraseData[]
   linksClicked: number
 }

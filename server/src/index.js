@@ -173,18 +173,30 @@ app.get('/api/category/:categoryName', async (req, res) => {
     const metadataStart = values.findIndex(row => 
       row && row[0] && row[0].includes('CATEGORY METADATA')
     );
-    const metadataHeaders = metadataStart !== -1 && values[metadataStart + 2]
-      ? values[metadataStart + 2]
+    // Headers are 1 row after "CATEGORY METADATA", data is 2 rows after
+    const metadataHeaders = metadataStart !== -1 && values[metadataStart + 1]
+      ? values[metadataStart + 1]
       : [];
-    const metadataRow = metadataStart !== -1 && values[metadataStart + 3]
-      ? values[metadataStart + 3]
+    const metadataRow = metadataStart !== -1 && values[metadataStart + 2]
+      ? values[metadataStart + 2]
       : [];
 
     const metadata = {};
     metadataHeaders.forEach((header, index) => {
       if (header) {
         const key = header.replace(/[()%]/g, '').trim().toLowerCase().replace(/\s+/g, '');
-        metadata[key] = metadataRow[index] || '';
+        let value = metadataRow[index] || '';
+        
+        // Special handling: Brand Visibility should always be read from Column A (index 0)
+        // This ensures consistency across all category sheets
+        if (key.includes('brandvisibility') && !key.includes('change')) {
+          // Always read from Column A (index 0) for Brand Visibility
+          value = (metadataRow[0] !== undefined && metadataRow[0] !== '') 
+            ? metadataRow[0] 
+            : (metadataRow[index] || '');
+        }
+        
+        metadata[key] = value;
       }
     });
 
@@ -208,6 +220,54 @@ app.get('/api/category/:categoryName', async (req, res) => {
             });
           } else {
             break;
+          }
+        }
+      }
+    }
+
+    // Parse Chart Data
+    const chartDataStart = values.findIndex(row => 
+      row && row[0] && (row[0].toLowerCase().includes('chart data') || row[0] === 'Chart Data')
+    );
+    const chartData = [];
+    if (chartDataStart !== -1) {
+      // Find the header row with "Lowe's" and "Home Depot"
+      const headerRow = values.find((row, idx) => 
+        idx > chartDataStart && row && (
+          (row[1] && row[1].toLowerCase().includes("lowe's")) ||
+          (row[0] && row[0].toLowerCase().includes("lowe's"))
+        )
+      );
+      if (headerRow) {
+        const headerIndex = values.indexOf(headerRow);
+        // Determine column indices: Lowe's and Home Depot
+        const lowesCol = headerRow.findIndex(cell => cell && cell.toLowerCase().includes("lowe's"));
+        const homeDepotCol = headerRow.findIndex(cell => cell && cell.toLowerCase().includes("home depot"));
+        
+        if (lowesCol !== -1 && homeDepotCol !== -1) {
+          // Parse up to 7 data points (or until we hit PROMPT QUESTIONS)
+          for (let i = headerIndex + 1; i < values.length && chartData.length < 7; i++) {
+            // Check if we've hit the next section
+            if (values[i] && values[i][0] && values[i][0].includes('PROMPT QUESTIONS')) {
+              break;
+            }
+            // Check if row has data in either column
+            if (values[i] && ((values[i][lowesCol] !== undefined && values[i][lowesCol] !== '') || 
+                (values[i][homeDepotCol] !== undefined && values[i][homeDepotCol] !== ''))) {
+              const lowesValue = parseFloat(values[i][lowesCol]) || 0;
+              const homeDepotValue = parseFloat(values[i][homeDepotCol]) || 0;
+              chartData.push({
+                day: String(chartData.length + 1),
+                user: lowesValue,
+                competitor: homeDepotValue
+              });
+            } else if (values[i] && values[i][0] && values[i][0].trim() === '') {
+              // Empty row, continue
+              continue;
+            } else {
+              // No more data rows
+              break;
+            }
           }
         }
       }
@@ -241,6 +301,7 @@ app.get('/api/category/:categoryName', async (req, res) => {
     res.json({
       metadata,
       competitorData,
+      chartData,
       phrases
     });
   } catch (error) {

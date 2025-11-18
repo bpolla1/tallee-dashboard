@@ -27,6 +27,7 @@ export interface CategoryData {
     lowestotal?: string;
   };
   competitorData: Array<{ name: string; value: number; color: string }>;
+  chartData?: Array<{ day: string; user: number; competitor: number }>;
   phrases: Array<{ phrase: string; userVisibility: number; competitorVisibility: number }>;
 }
 

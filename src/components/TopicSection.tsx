@@ -10,8 +10,8 @@ interface TopicSectionProps {
   topic: Topic
 }
 
-// Chart data should be in percentage (0-100) to match main dashboard
-const chartData = [
+// Fallback chart data if not provided from API
+const defaultChartData = [
   { day: 'M', user: 50, competitor: 42 },
   { day: 'T', user: 52, competitor: 45 },
   { day: 'W', user: 48, competitor: 40 },
@@ -32,6 +32,11 @@ function TopicSection({ topic }: TopicSectionProps) {
   const [linksCitedExpanded, setLinksCitedExpanded] = useState(false)
   const [currentRanking, setCurrentRanking] = useState(1)
   const totalRankings = 15
+
+  // Use chart data from topic if available, otherwise use default
+  const chartData = topic.chartData && topic.chartData.length > 0 
+    ? topic.chartData 
+    : defaultChartData
 
   // Test data for Links Cited section (only show for Refrigerators)
   const linksCitedData = topic.name === 'Refrigerators' ? [

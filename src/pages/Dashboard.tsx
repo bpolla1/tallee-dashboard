@@ -15,7 +15,9 @@ const categoryNames = [
   'Air purifiers',
   'Cooking',
   'Kitchen Cabinets',
-  'Washer & Dryer'
+  'Washer & Dryer',
+  'Water Heater',
+  'Tiles'
 ]
 
 // Helper function to transform category data to Topic format
@@ -29,6 +31,7 @@ function transformCategoryToTopic(categoryData: any, categoryName: string, id: s
     visibility: parseFloat(metadata.brandvisibility) || 50,
     visibilityChange: parseFloat(metadata.brandvisibilitychange) || 1.0,
     competitorData: categoryData.competitorData || [],
+    chartData: categoryData.chartData || [],
     phrases: categoryData.phrases || [],
     linksClicked: parseFloat(metadata.linksclicked) || 0,
   }

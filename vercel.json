@@ -1,19 +1,16 @@
 {
   "rewrites": [
     {
-      "source": "/lowes/(.*)",
-      "destination": "/lowes/index.html"
-    }
-  ],
-  "headers": [
+      "source": "/lowes",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/lowes/",
+      "destination": "/index.html"
+    },
     {
       "source": "/lowes/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "destination": "/index.html"
     }
   ]
 }

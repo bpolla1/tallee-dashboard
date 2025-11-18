@@ -19,10 +19,22 @@ const PORT = process.env.PORT || 3001;
 const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
 
 // Initialize Google Sheets API
-const auth = new google.auth.GoogleAuth({
-  keyFile: join(__dirname, '../credentials.json'),
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
+// Support both file-based (local) and environment variable-based (production) credentials
+let auth;
+if (process.env.GOOGLE_CREDENTIALS) {
+  // Production: Use credentials from environment variable (JSON string)
+  const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+  auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+  });
+} else {
+  // Local development: Use credentials file
+  auth = new google.auth.GoogleAuth({
+    keyFile: join(__dirname, '../credentials.json'),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+  });
+}
 
 const sheets = google.sheets({ version: 'v4', auth });
 

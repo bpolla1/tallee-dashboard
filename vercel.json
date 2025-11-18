@@ -1,5 +1,19 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
+    {
+      "source": "/lowes/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/lowes/favicon-:size.png",
+      "destination": "/favicon-:size.png"
+    },
+    {
+      "source": "/lowes/icon.svg",
+      "destination": "/icon.svg"
+    },
     {
       "source": "/lowes",
       "destination": "/index.html"

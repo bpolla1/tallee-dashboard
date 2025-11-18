@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background -->
+  <rect width="32" height="32" fill="white"/>
+  <!-- Horizontal bar at top - shorter to match plus width -->
+  <rect x="8" y="7" width="16" height="3" fill="black"/>
+  <!-- Plus sign below - centered, same width as bar -->
+  <!-- Horizontal part of plus (same width as top bar) -->
+  <rect x="8" y="17" width="16" height="3" fill="black"/>
+  <!-- Vertical part of plus (taller) -->
+  <rect x="14" y="13" width="4" height="10" fill="black"/>
+</svg>
+

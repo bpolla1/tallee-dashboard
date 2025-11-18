@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sequel Sans Font Family */
+@font-face {
+  font-family: 'Sequel Sans';
+  src: url('/fonts/SequelSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sequel Sans';
+  src: url('/fonts/SequelSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sequel Sans';
+  src: url('/fonts/SequelSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sequel Sans';
+  src: url('/fonts/SequelSans-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Tallee Design System - Warm, Professional Analytics Dashboard */
+    
+    /* Base colors - Warm beige background */
+    --background: 35 30% 96%;  /* #F7F4EF - soft beige */
+    --foreground: 25 20% 20%;  /* Dark warm gray */
+    --surface: 54 50% 96%;  /* #FAF9F0 - warm cream surface */
+    --text-default: 0 0% 6%;  /* #0F0F0F - near black */
+
+    /* Primary Color Palette - Blue Scale */
+    --primary-50: 199 100% 97%;
+    --primary-100: 199 100% 94%;
+    --primary-200: 199 100% 86%;
+    --primary-300: 199 97% 74%;
+    --primary-400: 199 93% 60%;
+    --primary-500: 199 89% 48%;
+    --primary-600: 199 98% 39%;
+    --primary-700: 199 97% 32%;
+    --primary-800: 199 92% 28%;
+    --primary-900: 199 81% 23%;
+
+    /* Card surfaces */
+    --card: 0 0% 100%;  /* Pure white for cards */
+    --card-foreground: 25 20% 20%;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    /* Popover/Dropdown */
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 20% 20%;
+
+    /* Primary - Teal/Blue for actions and key metrics */
+    --primary: 189 85% 42%;  /* Teal blue */
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 189 85% 36%;
+
+    /* Secondary - Subtle gray for secondary actions */
+    --secondary: 35 15% 92%;
+    --secondary-foreground: 25 20% 30%;
+
+    /* Success/Positive - Green for upward trends */
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 70% 95%;
+
+    /* Muted - For less important text and UI */
+    --muted: 35 15% 90%;
+    --muted-foreground: 25 10% 50%;
+
+    /* Accent - For highlights */
+    --accent: 189 85% 96%;
+    --accent-foreground: 189 85% 42%;
+
+    /* Destructive - Red for warnings */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 189 85% 42%;
+
+    /* Chart colors */
+    --chart-1: 189 85% 42%;  /* Primary teal */
+    --chart-2: 279 70% 58%;  /* Purple */
+    --chart-3: 142 70% 45%;  /* Green */
+    --chart-4: 32 95% 55%;   /* Orange */
+    --chart-5: 340 75% 55%;  /* Pink */
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 25 20% 12%;
+    --foreground: 35 15% 92%;
+
+    --card: 25 20% 16%;
+    --card-foreground: 35 15% 92%;
+
+    --popover: 25 20% 16%;
+    --popover-foreground: 35 15% 92%;
+
+    --primary: 189 85% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 25 15% 22%;
+    --secondary-foreground: 35 15% 85%;
+
+    --success: 142 70% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --muted: 25 15% 22%;
+    --muted-foreground: 35 10% 60%;
+
+    --accent: 189 85% 20%;
+    --accent-foreground: 189 85% 60%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 25 15% 26%;
+    --input: 25 15% 26%;
+    --ring: 189 85% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

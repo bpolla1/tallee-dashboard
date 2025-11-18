@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/lowes/(.*)",
+      "destination": "/lowes/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/lowes/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
+

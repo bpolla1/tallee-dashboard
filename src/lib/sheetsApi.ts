@@ -1,5 +1,8 @@
 // Use environment variable for production backend URL, or '/api' for local development
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+// In production, use full URL. In local dev, use '/api' which proxies to localhost:3001
+const API_BASE = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
 
 export interface MainDashboardData {
   overallRate: number;

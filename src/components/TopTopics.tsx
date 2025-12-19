@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Plus, Search } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const topics = [
   'All',
@@ -15,8 +16,13 @@ const topics = [
 ]
 
 function TopTopics() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [selectedTopic, setSelectedTopic] = useState('All')
   const [selectedTab, setSelectedTab] = useState('Topics')
+  
+  // Check if we're on the opportunities page
+  const isOnOpportunitiesPage = location.pathname === '/opportunities'
 
   // Map button names to topic names
   const topicNameMap: Record<string, string> = {
@@ -86,7 +92,7 @@ function TopTopics() {
           )}
         </button>
         <button
-          onClick={() => setSelectedTab('Opportunities')}
+          onClick={() => navigate('/opportunities')}
           className="flex flex-col gap-[6px] h-[28px]"
         >
           <span 
@@ -95,13 +101,13 @@ function TopTopics() {
               fontSize: '12.5px',
               fontWeight: '365',
               lineHeight: '1.2',
-              color: selectedTab === 'Opportunities' ? '#000' : 'rgba(0, 0, 0, 0.42)',
+              color: isOnOpportunitiesPage ? '#000' : 'rgba(0, 0, 0, 0.42)',
               letterSpacing: '-0.125px',
             }}
           >
             Opportunities
           </span>
-          {selectedTab === 'Opportunities' && (
+          {isOnOpportunitiesPage && (
             <div className="h-px w-full bg-black" />
           )}
         </button>

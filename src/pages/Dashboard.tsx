@@ -2,6 +2,7 @@ import Header from '../components/Header'
 import MainDashboard from '../components/MainDashboard'
 import TopTopics from '../components/TopTopics'
 import TopicSection from '../components/TopicSection'
+import HavenlyTopics from '../components/HavenlyTopics'
 import { Topic, TimePeriod } from '../types'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
@@ -37,7 +38,11 @@ function transformCategoryToTopic(categoryData: any, categoryName: string, id: s
   }
 }
 
-export default function Dashboard() {
+interface DashboardProps {
+  account?: 'lowes' | 'havenly'
+}
+
+export default function Dashboard({ account = 'lowes' }: DashboardProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('Month')
 
   // Fetch all categories
@@ -73,7 +78,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <Header account={account} />
       <div className="max-w-[1400px] mx-auto px-9 py-6">
         <div className="mb-6">
           <h1 
@@ -139,21 +144,25 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-        <MainDashboard selectedPeriod={selectedPeriod} />
+        <MainDashboard selectedPeriod={selectedPeriod} account={account} />
         
         <div className="mb-[36px]" />
         
-        <TopTopics />
+        {account === 'lowes' && <TopTopics />}
         
         <div className="mt-[30px]">
-              {topics.map((topic) => {
-                const topicId = `topic-${topic.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and')}`
-                return (
-                  <div key={topic.id} id={topicId}>
-                    <TopicSection topic={topic} />
-                  </div>
-                )
-              })}
+              {account === 'lowes' ? (
+                topics.map((topic) => {
+                  const topicId = `topic-${topic.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and')}`
+                  return (
+                    <div key={topic.id} id={topicId}>
+                      <TopicSection topic={topic} />
+                    </div>
+                  )
+                })
+              ) : (
+                <HavenlyTopics />
+              )}
         </div>
           </>
         )}

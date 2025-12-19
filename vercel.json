@@ -29,6 +29,54 @@
     {
       "source": "/lowes/dashboard/:path*",
       "destination": "/index.html"
+    },
+    {
+      "source": "/lowes/opportunities",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/lowes/opportunities/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/havenly/favicon-:size.png",
+      "destination": "/favicon-:size.png"
+    },
+    {
+      "source": "/havenly/icon.svg",
+      "destination": "/icon.svg"
+    },
+    {
+      "source": "/havenly",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/dashboard",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/dashboard/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/opportunities",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/opportunities/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/havenly/opportunities/:id/write",
+      "destination": "/index.html"
     }
   ]
 }

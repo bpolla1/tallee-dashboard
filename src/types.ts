@@ -22,4 +22,11 @@ export interface Topic {
   linksClicked: number
 }
 
+export interface Opportunity {
+  id: string
+  type: string
+  title: string
+  impactScore: number
+}
+
 export type TimePeriod = 'Day' | 'Week' | 'Month' | 'Quarter' | 'Year'

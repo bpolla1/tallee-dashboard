@@ -2,8 +2,15 @@ import talleeLogo from '@/assets/tallee-logo-full.png'
 import menuIcon from '@/assets/menu-icon.svg'
 import userIcon from '@/assets/user-icon.svg'
 import lowesLogo from '@/assets/lowes-logo.png'
+import { useNavigate } from 'react-router-dom'
 
-function Header() {
+interface HeaderProps {
+  account?: 'lowes' | 'havenly'
+}
+
+function Header({ account = 'lowes' }: HeaderProps) {
+  const navigate = useNavigate()
+  
   return (
     <header 
       className="sticky top-0 z-30 flex h-[45px] items-center border-b border-black/5"
@@ -35,13 +42,36 @@ function Header() {
           </button>
         </div>
 
-        {/* Right side: Lowes Logo + User icon */}
+        {/* Right side: Business Name or Logo + User icon */}
         <div className="flex items-center gap-4">
-          <img 
-            src={lowesLogo} 
-            alt="Lowe's" 
-            className="h-[24px] w-auto object-contain"
-          />
+          {account === 'havenly' ? (
+            <button
+              onClick={() => navigate('/havenly/dashboard')}
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+              aria-label="Go to dashboard"
+              style={{
+                fontFamily: 'var(--font-heading, "Sequel Sans VF Head", Inter, sans-serif)',
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#000',
+                letterSpacing: '-0.14px',
+              }}
+            >
+              Business Name
+            </button>
+          ) : (
+            <button 
+              onClick={() => navigate('/lowes/dashboard')}
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+              aria-label="Go to dashboard"
+            >
+              <img 
+                src={lowesLogo} 
+                alt="Lowe's" 
+                className="h-[24px] w-auto object-contain"
+              />
+            </button>
+          )}
           <div 
             className="flex h-9 w-9 items-center justify-center"
             style={{

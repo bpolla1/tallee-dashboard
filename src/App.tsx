@@ -4,6 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import Opportunities from "./pages/Opportunities";
+import WriteArticle from "./pages/WriteArticle";
+import ViewArticle from "./pages/ViewArticle";
+import HavenlyOpportunities from "./pages/HavenlyOpportunities";
+import HavenlyWriteArticle from "./pages/HavenlyWriteArticle";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -23,10 +28,24 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename="/lowes">
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Lowes Dashboard Routes */}
+          <Route path="/lowes" element={<Navigate to="/lowes/dashboard" replace />} />
+          <Route path="/lowes/dashboard" element={<Dashboard />} />
+          <Route path="/lowes/opportunities" element={<Opportunities />} />
+          <Route path="/lowes/opportunities/:id/write" element={<WriteArticle />} />
+          <Route path="/lowes/opportunities/:id/view" element={<ViewArticle />} />
+          
+          {/* Havenly Dashboard Routes */}
+          <Route path="/havenly" element={<Navigate to="/havenly/dashboard" replace />} />
+          <Route path="/havenly/dashboard" element={<Dashboard account="havenly" />} />
+          <Route path="/havenly/opportunities" element={<HavenlyOpportunities />} />
+          <Route path="/havenly/opportunities/:id/write" element={<HavenlyWriteArticle />} />
+          
+          {/* Default redirect */}
+          <Route path="/" element={<Navigate to="/lowes/dashboard" replace />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -5,69 +5,113 @@ import homeDepotLogo from '../assets/home-depot-logo.jpg'
 import lowesLogo from '../assets/lowes-logo.png'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMainDashboard, fetchMetrics } from '../lib/sheetsApi'
+import { useNavigate } from 'react-router-dom'
 
 interface MainDashboardProps {
   selectedPeriod: TimePeriod
+  account?: 'lowes' | 'havenly'
 }
 
-function MainDashboard({ selectedPeriod }: MainDashboardProps) {
-  // Fetch main dashboard data
+// Hardcoded Havenly data
+const havenlyCompetitors = [
+  { name: 'Uncommon', value: 84 },
+  { name: 'Avenue', value: 56 },
+  { name: 'Boulevard', value: 53 },
+  { name: 'Oliv', value: 24 },
+  { name: 'Balcony', value: 13 },
+]
+
+const havenlyChartData = [
+  { day: '1', user: 80, competitor: 11 },
+  { day: '2', user: 78, competitor: 12 },
+  { day: '3', user: 75, competitor: 12 },
+  { day: '4', user: 78, competitor: 9 },
+  { day: '5', user: 77, competitor: 8 },
+  { day: '6', user: 76, competitor: 9 },
+  { day: '7', user: 79, competitor: 11 },
+  { day: '8', user: 78, competitor: 12 },
+  { day: '9', user: 79, competitor: 13 },
+  { day: '10', user: 80, competitor: 13 },
+]
+
+function MainDashboard({ selectedPeriod, account = 'lowes' }: MainDashboardProps) {
+  const navigate = useNavigate()
+  
+  // Fetch main dashboard data only for Lowes
   const { data: dashboardData, isLoading: isLoadingDashboard } = useQuery({
     queryKey: ['main-dashboard'],
     queryFn: fetchMainDashboard,
     refetchInterval: 60000, // Refetch every 60 seconds
+    enabled: account === 'lowes', // Only fetch for Lowes
   })
 
-  // Fetch metrics
+  // Fetch metrics only for Lowes
   const { data: metricsData, isLoading: isLoadingMetrics } = useQuery({
     queryKey: ['metrics'],
     queryFn: fetchMetrics,
     refetchInterval: 60000, // Refetch every 60 seconds
+    enabled: account === 'lowes', // Only fetch for Lowes
   })
 
-  // Use fetched data or fallback to defaults
-  const chartData = dashboardData?.chartData || [
-    { day: '1', user: 38, competitor: 62 },
-    { day: '2', user: 25, competitor: 65 },
-    { day: '3', user: 33, competitor: 67 },
-    { day: '4', user: 31, competitor: 69 },
-    { day: '5', user: 38, competitor: 62 },
-    { day: '6', user: 27, competitor: 73 },
-    { day: '7', user: 23, competitor: 77 },
-    { day: '8', user: 19, competitor: 81 },
-    { day: '9', user: 25, competitor: 75 },
-    { day: '10', user: 27, competitor: 73 },
-    { day: '11', user: 27, competitor: 73 },
-    { day: '12', user: 31, competitor: 69 },
-    { day: '13', user: 33, competitor: 67 },
-    { day: '14', user: 35, competitor: 65 },
-    { day: '15', user: 36, competitor: 64 },
-  ]
+  // Use fetched data or fallback to defaults based on account
+  const chartData = account === 'havenly' 
+    ? havenlyChartData 
+    : (dashboardData?.chartData || [
+        { day: '1', user: 38, competitor: 62 },
+        { day: '2', user: 25, competitor: 65 },
+        { day: '3', user: 33, competitor: 67 },
+        { day: '4', user: 31, competitor: 69 },
+        { day: '5', user: 38, competitor: 62 },
+        { day: '6', user: 27, competitor: 73 },
+        { day: '7', user: 23, competitor: 77 },
+        { day: '8', user: 19, competitor: 81 },
+        { day: '9', user: 25, competitor: 75 },
+        { day: '10', user: 27, competitor: 73 },
+        { day: '11', user: 27, competitor: 73 },
+        { day: '12', user: 31, competitor: 69 },
+        { day: '13', user: 33, competitor: 67 },
+        { day: '14', user: 35, competitor: 65 },
+        { day: '15', user: 36, competitor: 64 },
+      ])
 
-  const competitors = dashboardData?.competitors?.map(comp => ({
-    name: comp.name,
-    value: comp.rate,
-    color: comp.name === 'Home Depot' ? '#ff6600' : '#004990',
-    logo: comp.name === 'Home Depot' ? homeDepotLogo : lowesLogo,
-  })) || [
-    { name: 'Home Depot', value: 84, color: '#ff6600', logo: homeDepotLogo },
-    { name: "Lowe's", value: 56, color: '#004990', logo: lowesLogo },
-  ]
+  const competitors = account === 'havenly'
+    ? havenlyCompetitors.map(comp => ({
+        name: comp.name,
+        value: comp.value,
+        color: comp.name === 'Balcony' ? '#6881A8' : (comp.name === 'Uncommon' ? '#000' : '#000'),
+        logo: undefined, // No logos for Havenly competitors
+      }))
+    : (dashboardData?.competitors?.map(comp => ({
+        name: comp.name,
+        value: comp.rate,
+        color: comp.name === 'Home Depot' ? '#ff6600' : '#004990',
+        logo: comp.name === 'Home Depot' ? homeDepotLogo : lowesLogo,
+      })) || [
+        { name: 'Home Depot', value: 84, color: '#ff6600', logo: homeDepotLogo },
+        { name: "Lowe's", value: 56, color: '#004990', logo: lowesLogo },
+      ])
 
-  const overallRate = dashboardData?.overallRate || 22
-  const overallChange = dashboardData?.overallChange || 7
+  const overallRate = account === 'havenly' ? 22 : (dashboardData?.overallRate || 22)
+  const overallChange = account === 'havenly' ? 7 : (dashboardData?.overallChange || 7)
 
   // Transform metrics data
   const getMetricValue = (metricName: string) => {
+    if (account === 'havenly') {
+      // Hardcoded values for Havenly from Figma
+      if (metricName === 'Topics') return 3
+      if (metricName === 'Opportunities') return 9
+      if (metricName === 'Prompts') return 9
+      return 0
+    }
     const metric = metricsData?.find((m: any) => m['Metric Name'] === metricName)
     return metric ? metric.Value : 0
   }
 
-  const topicsValue = getMetricValue('Topics') || 127
-  const opportunitiesValue = getMetricValue('Opportunities') || 629
-  const promptsValue = getMetricValue('Prompts') || 784
+  const topicsValue = getMetricValue('Topics') || (account === 'havenly' ? 3 : 127)
+  const opportunitiesValue = getMetricValue('Opportunities') || (account === 'havenly' ? 9 : 629)
+  const promptsValue = getMetricValue('Prompts') || (account === 'havenly' ? 9 : 784)
 
-  if (isLoadingDashboard || isLoadingMetrics) {
+  if (account === 'lowes' && (isLoadingDashboard || isLoadingMetrics)) {
     return (
       <div 
         className="rounded-[18px] mb-6"
@@ -205,22 +249,22 @@ function MainDashboard({ selectedPeriod }: MainDashboardProps) {
                 <Line 
                   type="linear" 
                   dataKey="user" 
-                  stroke="#004990" 
+                  stroke={account === 'havenly' ? '#000000' : '#004990'}
                   strokeWidth={3}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   dot={false}
-                  activeDot={{ r: 4, fill: '#004990' }}
+                  activeDot={{ r: 4, fill: account === 'havenly' ? '#000000' : '#004990' }}
                 />
                 <Line 
                   type="linear" 
                   dataKey="competitor" 
-                  stroke="#FF6600" 
-                  strokeWidth={3}
+                  stroke={account === 'havenly' ? '#6881A8' : '#FF6600'}
+                  strokeWidth={account === 'havenly' ? 4 : 3}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   dot={false}
-                  activeDot={{ r: 4, fill: '#FF6600' }}
+                  activeDot={{ r: 4, fill: account === 'havenly' ? '#6881A8' : '#FF6600' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -251,11 +295,13 @@ function MainDashboard({ selectedPeriod }: MainDashboardProps) {
                 <div className="flex items-center gap-[30px] mb-[12px]">
                   {/* Logo and Name */}
                   <div className="flex items-center gap-[12px] flex-shrink-0" style={{ width: '130px' }}>
+                    {competitor.logo && (
                     <img 
                       src={competitor.logo} 
                       alt={competitor.name}
                       className="w-[24px] h-[24px] object-contain flex-shrink-0"
                     />
+                    )}
                     <span 
                       style={{
                         display: '-webkit-box',
@@ -433,8 +479,9 @@ function MainDashboard({ selectedPeriod }: MainDashboardProps) {
             >
               {opportunitiesValue}
             </div>
-            <a 
-              href="#"
+            <button
+              onClick={() => account === 'lowes' ? navigate('/lowes/opportunities') : navigate('/havenly/opportunities')}
+              className="text-left hover:opacity-70 transition-opacity"
               style={{
                 fontFamily: 'var(--font-heading, "Sequel Sans VF Head", Inter, sans-serif)',
                 fontSize: '12.5px',
@@ -442,10 +489,11 @@ function MainDashboard({ selectedPeriod }: MainDashboardProps) {
                 lineHeight: '1.2',
                 color: '#000',
                 letterSpacing: '-0.125px',
+                cursor: 'pointer',
               }}
             >
               View →
-            </a>
+            </button>
           </div>
           <div className="h-px w-full" style={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }} />
           <div className="flex flex-col gap-[15px]">

@@ -1,8 +1,24 @@
 // Use environment variable for production backend URL, or '/api' for local development
 // In production, use full URL. In local dev, use '/api' which proxies to localhost:3001
-const API_BASE = import.meta.env.VITE_API_URL 
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : '/api';
+const getApiBase = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (!apiUrl) {
+    return '/api';
+  }
+  
+  // Remove trailing slash if present
+  const baseUrl = apiUrl.replace(/\/$/, '');
+  
+  // If the URL already ends with /api, use it as-is
+  if (baseUrl.endsWith('/api')) {
+    return baseUrl;
+  }
+  
+  // Otherwise, append /api
+  return `${baseUrl}/api`;
+};
+
+const API_BASE = getApiBase();
 
 // Debug logging (remove in production if needed)
 if (typeof window !== 'undefined') {
